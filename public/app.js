@@ -546,7 +546,7 @@ function initAdminPage() {
 // -----------------------------------------------------------------------------
 // 5. Global Clipboard Handlers & Page Route Dispatcher
 // -----------------------------------------------------------------------------
-document.addEventListener("DOMContentLoaded", () => {
+function initAll() {
   // Wire all generic copy buttons
   document.querySelectorAll(".copy-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -565,4 +565,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if ($("lookup-form")) initLookupPage();
   if ($("bundle-editor")) initUploadPage();
   if ($("admin-token")) initAdminPage();
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initAll);
+} else {
+  initAll();
+}

@@ -3,61 +3,145 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Admin · pubkey.locker</title>
+    <title>Admin Console · pubkey.locker</title>
+    <meta
+      name="description"
+      content="Administrative console for auditing and removing stored public key bundles on pubkey.locker."
+    />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <header class="site-header">
       <div class="container header-inner">
-        <a class="brand" href="/">pubkey<span>.locker</span></a>
+        <a class="brand" href="/">
+          <span class="brand-dot"></span>
+          pubkey<span>.locker</span>
+        </a>
         <nav class="nav">
-          <a href="/">Home</a>
+          <a href="/lookup.html">Lookup</a>
+          <a href="/upload.html">Publish</a>
           <a href="/docs.html">Docs</a>
           <a href="/admin.html" class="active">Admin</a>
+        </nav>
+        <div class="nav-actions">
+          <button
+            id="cli-toggle-btn"
+            class="btn-cli"
+            type="button"
+            title="Toggle Web CLI (Hotkey: ~ or `)"
+          >
+            <span>CLI</span>
+            <span class="kbd-badge">~</span>
+          </button>
           <a
-            class="btn-nav"
+            class="btn-gh"
             href="https://github.com/pranabeshsingh/pubkey_locker"
             target="_blank"
             rel="noreferrer"
             >GitHub</a
           >
-        </nav>
+        </div>
       </div>
     </header>
 
-    <main class="container">
-      <section class="section">
-        <div class="panel">
-          <div class="panel-header">
-            <h2>Admin console</h2>
-            <p>Protected by admin token. View and remove stored bundles.</p>
-          </div>
-          <div class="inline-form">
-            <input id="admin-token" type="password" placeholder="Admin token" />
-            <button id="admin-load-btn" class="btn btn-primary">Load bundles</button>
-          </div>
-          <p id="admin-status" class="status"></p>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Handle</th>
-                  <th>ID</th>
-                  <th>Created</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="admin-rows"></tbody>
-            </table>
-          </div>
+    <main class="container" style="padding-top: 3rem">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Admin Console</h2>
+          <p>
+            Protected by <code>X-Admin-Token</code>. Audit, filter, and remove registered bundles
+            from Oracle Autonomous Database.
+          </p>
         </div>
-      </section>
+
+        <!-- Auth and Filter Toolbar -->
+        <div class="admin-toolbar">
+          <input
+            id="admin-token"
+            class="admin-token-input"
+            type="password"
+            placeholder="Enter X-Admin-Token..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button id="admin-load-btn" class="btn btn-primary" type="button">
+            Connect &amp; Load
+          </button>
+          <input
+            id="admin-filter"
+            class="admin-filter-input"
+            type="text"
+            placeholder="Filter loaded rows by handle or UUID..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+
+        <p id="admin-status" class="status"></p>
+
+        <!-- Bundles Table -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 25%">Handle</th>
+                <th style="width: 35%">Bundle UUID</th>
+                <th style="width: 25%">Created At</th>
+                <th style="width: 15%; text-align: right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-rows">
+              <tr>
+                <td
+                  colspan="4"
+                  style="text-align: center; color: var(--text-muted); padding: 3rem 1rem"
+                >
+                  Enter your admin token above and click <strong>Connect &amp; Load</strong> to
+                  manage bundles.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </main>
 
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal-backdrop">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h3 id="modal-title" style="color: var(--error)">Confirm Bundle Deletion</h3>
+        <p>
+          Are you sure you want to permanently delete bundle
+          <code id="modal-delete-target" class="inline"></code>? This action cannot be undone.
+        </p>
+        <div class="modal-actions">
+          <button id="modal-cancel-delete-btn" type="button" class="btn btn-secondary">
+            Cancel
+          </button>
+          <button id="modal-confirm-delete-btn" type="button" class="btn btn-danger">
+            Delete Permanently
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
     <footer class="footer">
-      <div class="container">
-        <div class="footer-bottom">
-          <span>© pubkey.locker</span>
+      <div class="container footer-inner">
+        <div>
+          <div class="brand" style="font-size: 1.1rem; margin-bottom: 0.4rem">
+            <span class="brand-dot"></span>
+            pubkey<span>.locker</span>
+          </div>
+          <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted)">
+            Enterprise public key registry backed by Oracle Autonomous Database.
+          </p>
+        </div>
+        <div class="footer-links">
+          <a href="/lookup.html">Lookup</a>
+          <a href="/upload.html">Publish</a>
+          <a href="/docs.html">Docs</a>
+          <a href="/admin.html">Admin</a>
           <a href="https://github.com/pranabeshsingh/pubkey_locker" target="_blank" rel="noreferrer"
             >GitHub</a
           >
@@ -66,5 +150,6 @@
     </footer>
 
     <script src="/app.js"></script>
+    <script src="/cli.js"></script>
   </body>
 </html>

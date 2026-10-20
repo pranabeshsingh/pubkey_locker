@@ -3,268 +3,273 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>pubkey.locker — Public key registry</title>
+    <title>pubkey.locker — Enterprise Public Key Registry</title>
+    <meta
+      name="description"
+      content="A high-speed, curl-friendly public keyserver backed by Oracle Autonomous Database. Store, validate, and resolve signed SSH key bundles."
+    />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <header class="site-header">
       <div class="container header-inner">
-        <a class="brand" href="/">pubkey<span>.locker</span></a>
+        <a class="brand" href="/">
+          <span class="brand-dot"></span>
+          pubkey<span>.locker</span>
+        </a>
         <nav class="nav">
-          <a href="#features">Features</a>
-          <a href="#how">How it works</a>
+          <a href="/lookup.html">Lookup</a>
+          <a href="/upload.html">Publish</a>
           <a href="/docs.html">Docs</a>
           <a href="/admin.html">Admin</a>
+        </nav>
+        <div class="nav-actions">
+          <button
+            id="cli-toggle-btn"
+            class="btn-cli"
+            type="button"
+            title="Toggle Web CLI (Hotkey: ~ or `)"
+          >
+            <span>CLI</span>
+            <span class="kbd-badge">~</span>
+          </button>
           <a
-            class="btn-nav"
+            class="btn-gh"
             href="https://github.com/pranabeshsingh/pubkey_locker"
             target="_blank"
             rel="noreferrer"
             >GitHub</a
           >
-        </nav>
+        </div>
       </div>
     </header>
 
     <main>
+      <!-- Hero Section -->
       <section class="container hero">
         <div>
-          <span class="eyebrow">Enterprise-grade key registry</span>
-          <h1>Store, validate, and resolve public keys.</h1>
-          <p class="lead">
-            pubkey.locker is a curl-friendly keyserver for signed SSH key bundles. Upload a bundle,
-            validate it, and resolve it by handle over HTTPS.
+          <span class="eyebrow">Enterprise Public Key Registry</span>
+          <h1>Store, validate, and resolve signed public keys.</h1>
+          <p class="hero-lead">
+            pubkey.locker is a curl-friendly keyserver backed by Oracle Autonomous Database. Publish
+            cryptographically signed key bundles, validate ownership proofs, and resolve keys over
+            HTTPS directly into production environments.
           </p>
+
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#upload">Upload key</a>
-            <a class="btn btn-secondary" href="/docs.html">Read docs</a>
-            <a
-              class="btn btn-secondary"
-              href="https://github.com/pranabeshsingh/pubkey_locker"
-              target="_blank"
-              rel="noreferrer"
-              >View on GitHub</a
-            >
+            <a class="btn btn-primary" href="/lookup.html">Explore Keys</a>
+            <a class="btn btn-secondary" href="/upload.html">Publish Bundle</a>
+            <a class="btn btn-secondary" href="/docs.html">Documentation</a>
           </div>
+
+          <!-- Quick Lookup Bar -->
+          <form id="quick-lookup-form" class="quick-lookup">
+            <span class="quick-lookup-label">Resolve handle:</span>
+            <input
+              id="quick-handle-input"
+              type="text"
+              placeholder="e.g. alice"
+              autocomplete="off"
+              spellcheck="false"
+              required
+            />
+            <button
+              type="submit"
+              class="btn btn-primary"
+              style="padding: 0.4rem 0.9rem; font-size: 0.85rem"
+            >
+              Resolve →
+            </button>
+          </form>
         </div>
-        <div class="terminal">
-          <p><span>$</span> curl https://pubkey.locker/alice.keys</p>
-          <p><span>$</span> curl https://pubkey.locker/alice.json</p>
-          <p><span>$</span> curl -X POST https://pubkey.locker/api/keys</p>
-          <p><span>$</span> curl https://pubkey.locker/api/keys/alice</p>
+
+        <!-- Terminal Showcase -->
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+            </div>
+            <span class="terminal-title">bash — curl client</span>
+            <button class="btn-copy-sm copy-btn" data-copy="curl https://pubkey.locker/alice.keys">
+              Copy all
+            </button>
+          </div>
+          <div class="terminal-body">
+            <div class="terminal-row">
+              <span class="terminal-cmd"><span>$</span> curl https://pubkey.locker/alice.keys</span>
+              <button
+                class="btn-copy-sm copy-btn"
+                data-copy="curl https://pubkey.locker/alice.keys"
+              >
+                copy
+              </button>
+            </div>
+            <div class="terminal-row">
+              <span class="terminal-cmd"><span>$</span> curl https://pubkey.locker/alice.json</span>
+              <button
+                class="btn-copy-sm copy-btn"
+                data-copy="curl https://pubkey.locker/alice.json"
+              >
+                copy
+              </button>
+            </div>
+            <div class="terminal-row">
+              <span class="terminal-cmd"
+                ><span>$</span> curl https://pubkey.locker/api/keys/alice</span
+              >
+              <button
+                class="btn-copy-sm copy-btn"
+                data-copy="curl https://pubkey.locker/api/keys/alice"
+              >
+                copy
+              </button>
+            </div>
+            <div class="terminal-row">
+              <span class="terminal-cmd"
+                ><span>$</span> curl -X POST https://pubkey.locker/api/keys</span
+              >
+              <button
+                class="btn-copy-sm copy-btn"
+                data-copy="curl -X POST https://pubkey.locker/api/keys"
+              >
+                copy
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section id="features" class="container section">
+      <!-- Protocol Flow Section -->
+      <section class="container section">
         <div class="section-header">
-          <h2>Features</h2>
-          <p>Built for developers, sysadmins, and automated systems.</p>
+          <h2>Protocol Architecture</h2>
+          <p>End-to-end cryptographic integrity from key generation to server authorization.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <h3>Prepare &amp; Sign</h3>
+            <p>
+              Generate Ed25519 or RSA keys locally. Sign an ownership proof challenge containing
+              your target handle.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <h3>Verify Schema</h3>
+            <p>
+              Dry-run check against the validation schema to verify fingerprints, signature
+              algorithms, and payload types.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <h3>Autonomous Storage</h3>
+            <p>
+              Store verified bundles with ACID transactions in Oracle Autonomous Database 26ai with
+              full encryption.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">04</div>
+            <h3>Resolve over HTTPS</h3>
+            <p>
+              Resolve bundles via curl or integrate directly with OpenSSH AuthorizedKeysCommand in
+              milliseconds.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="container section">
+        <div class="section-header">
+          <h2>Platform Capabilities</h2>
+          <p>
+            Engineered for infrastructure automation, developer identity, and zero-trust
+            environments.
+          </p>
         </div>
         <div class="feature-grid">
-          <div class="feature">
-            <h3>Signed bundles</h3>
-            <p>Each key bundle includes an ownership proof and optional revocation key.</p>
+          <div class="feature-card">
+            <div class="feature-icon">PROOF</div>
+            <h3>Signed Ownership Proofs</h3>
+            <p>
+              Every bundle includes cryptographic signature proofs, preventing handle spoofing and
+              unauthorized overrides.
+            </p>
           </div>
-          <div class="feature">
-            <h3>Validation</h3>
-            <p>Schema checks run before storage and again through CI.</p>
+          <div class="feature-card">
+            <div class="feature-icon">ORACLE</div>
+            <h3>Oracle 26ai Backbone</h3>
+            <p>
+              Backed by Oracle Autonomous Transaction Processing for high availability, automatic
+              scaling, and fast lookups.
+            </p>
           </div>
-          <div class="feature">
-            <h3>Oracle-backed</h3>
-            <p>Autonomous Database stores bundles with high availability.</p>
+          <div class="feature-card">
+            <div class="feature-icon">CURL</div>
+            <h3>curl-Friendly APIs</h3>
+            <p>
+              Fetch raw authorized_keys text or complete JSON envelopes using standard command-line
+              tools without SDKs.
+            </p>
           </div>
-          <div class="feature">
-            <h3>curl-friendly</h3>
-            <p>Fetch keys in text and JSON formats from the command line.</p>
+          <div class="feature-card">
+            <div class="feature-icon">SCHEMA</div>
+            <h3>Pre-Flight Validation</h3>
+            <p>
+              Automated validation endpoints verify key formats (Ed25519, RSA, ECDSA) and signatures
+              before committing to storage.
+            </p>
           </div>
-          <div class="feature">
-            <h3>Admin controls</h3>
-            <p>Token-protected endpoints for listing and removing bundles.</p>
+          <div class="feature-card">
+            <div class="feature-icon">ADMIN</div>
+            <h3>Token-Secured Administration</h3>
+            <p>
+              Administrative management endpoints protected with secure token authentication for
+              bundle audits and revocations.
+            </p>
           </div>
-          <div class="feature">
-            <h3>TLS by default</h3>
-            <p>Caddy provisions and renews certificates automatically.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="how" class="container section">
-        <div class="section-header">
-          <h2>How it works</h2>
-          <p>A simple flow from upload to resolution.</p>
-        </div>
-        <div class="steps">
-          <div class="step">
-            <div class="step-number">01</div>
-            <h3>Prepare</h3>
-            <p>Create a signed key bundle in JSON.</p>
-          </div>
-          <div class="step">
-            <div class="step-number">02</div>
-            <h3>Validate</h3>
-            <p>Check schema, handle, keys, and proof.</p>
-          </div>
-          <div class="step">
-            <div class="step-number">03</div>
-            <h3>Store</h3>
-            <p>Upload to the Oracle-backed API.</p>
-          </div>
-          <div class="step">
-            <div class="step-number">04</div>
-            <h3>Resolve</h3>
-            <p>Fetch by handle over HTTPS.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="upload" class="container section">
-        <div class="panel">
-          <div class="panel-header">
-            <h2>Upload key bundle</h2>
-            <p>Paste a signed JSON bundle. It is validated before storage.</p>
-          </div>
-          <div class="grid two">
-            <div>
-              <label for="upload-bundle">Bundle JSON</label>
-              <textarea
-                id="upload-bundle"
-                rows="18"
-                spellcheck="false"
-                placeholder='{"version":1,"handle":"alice",...}'
-              ></textarea>
-              <div class="actions">
-                <button id="validate-btn" class="btn btn-secondary">Validate</button>
-                <button id="upload-btn" class="btn btn-primary">Upload</button>
-              </div>
-              <p id="upload-status" class="status"></p>
-            </div>
-            <div>
-              <h3>Expected shape</h3>
-              <pre class="code">
-{
-  "version": 1,
-  "handle": "alice",
-  "keys": [{
-    "type": "ssh-ed25519",
-    "publicKey": "ssh-ed25519 ...",
-    "fingerprint": "SHA256:..."
-  }],
-  "proof": {
-    "message": "register alice",
-    "signature": "base64...",
-    "signedBy": "ssh-ed25519 ..."
-  }
-}</pre>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="lookup" class="container section">
-        <div class="panel">
-          <div class="panel-header">
-            <h2>Lookup handle</h2>
-            <p>Fetch the latest bundle for a handle.</p>
-          </div>
-          <div class="inline-form">
-            <input id="lookup-handle" type="text" placeholder="alice" />
-            <button id="lookup-btn" class="btn btn-primary">Lookup</button>
-          </div>
-          <p id="lookup-status" class="status"></p>
-          <pre id="lookup-result" class="code result"></pre>
-        </div>
-      </section>
-
-      <section id="validate" class="container section">
-        <div class="panel">
-          <div class="panel-header">
-            <h2>Validate bundle</h2>
-            <p>Check schema and required fields without storing.</p>
-          </div>
-          <div class="grid two">
-            <div>
-              <textarea
-                id="validate-bundle"
-                rows="14"
-                spellcheck="false"
-                placeholder='{"version":1,...}'
-              ></textarea>
-              <button id="validate-only-btn" class="btn btn-primary">Validate only</button>
-              <p id="validate-status" class="status"></p>
-            </div>
-            <div>
-              <h3>Checks</h3>
-              <ul class="checks">
-                <li>Version is 1</li>
-                <li>Handle format</li>
-                <li>Non-empty key list</li>
-                <li>Supported key types</li>
-                <li>Proof fields present</li>
-              </ul>
-            </div>
+          <div class="feature-card">
+            <div class="feature-icon">TLS</div>
+            <h3>Automated TLS Infrastructure</h3>
+            <p>
+              Edge certificates automatically provisioned, validated, and renewed via Caddy reverse
+              proxy on port 3002.
+            </p>
           </div>
         </div>
       </section>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div>
-            <a class="brand" href="/">pubkey<span>.locker</span></a>
-            <p>Oracle-backed public key registry with signed bundles.</p>
+      <div class="container footer-inner">
+        <div>
+          <div class="brand" style="font-size: 1.1rem; margin-bottom: 0.4rem">
+            <span class="brand-dot"></span>
+            pubkey<span>.locker</span>
           </div>
-          <div>
-            <h4>Product</h4>
-            <a href="#features">Features</a>
-            <a href="#how">How it works</a>
-            <a href="/docs.html">Documentation</a>
-          </div>
-          <div>
-            <h4>Resources</h4>
-            <a href="/admin.html">Admin</a>
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker"
-              target="_blank"
-              rel="noreferrer"
-              >GitHub</a
-            >
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker/issues"
-              target="_blank"
-              rel="noreferrer"
-              >Issues</a
-            >
-          </div>
-          <div>
-            <h4>Project</h4>
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker"
-              target="_blank"
-              rel="noreferrer"
-              >Source code</a
-            >
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker/blob/master/README.md"
-              target="_blank"
-              rel="noreferrer"
-              >README</a
-            >
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker/actions"
-              target="_blank"
-              rel="noreferrer"
-              >CI status</a
-            >
-          </div>
+          <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted)">
+            Enterprise public key registry backed by Oracle Autonomous Database.
+          </p>
         </div>
-        <div class="footer-bottom">
-          <span>© pubkey.locker</span>
-          <span>Built with Node.js, Oracle, and Caddy</span>
+        <div class="footer-links">
+          <a href="/lookup.html">Lookup</a>
+          <a href="/upload.html">Publish</a>
+          <a href="/docs.html">Docs</a>
+          <a href="/admin.html">Admin</a>
+          <a href="https://github.com/pranabeshsingh/pubkey_locker" target="_blank" rel="noreferrer"
+            >GitHub</a
+          >
         </div>
       </div>
     </footer>
 
     <script src="/app.js"></script>
+    <script src="/cli.js"></script>
   </body>
 </html>

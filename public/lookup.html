@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Key Explorer · pubkey.locker</title>
+    <meta
+      name="description"
+      content="Resolve and inspect public key bundles, fingerprints, and cryptographic ownership proofs by handle."
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">
+          <span class="brand-dot"></span>
+          pubkey<span>.locker</span>
+        </a>
+        <nav class="nav">
+          <a href="/lookup.html" class="active">Lookup</a>
+          <a href="/upload.html">Publish</a>
+          <a href="/docs.html">Docs</a>
+          <a href="/admin.html">Admin</a>
+        </nav>
+        <div class="nav-actions">
+          <button
+            id="cli-toggle-btn"
+            class="btn-cli"
+            type="button"
+            title="Toggle Web CLI (Hotkey: ~ or `)"
+          >
+            <span>CLI</span>
+            <span class="kbd-badge">~</span>
+          </button>
+          <a
+            class="btn-gh"
+            href="https://github.com/pranabeshsingh/pubkey_locker"
+            target="_blank"
+            rel="noreferrer"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="container" style="padding-top: 3rem">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Key Explorer</h2>
+          <p>
+            Lookup any registered handle to inspect its public keys, fingerprints, and cryptographic
+            signatures.
+          </p>
+        </div>
+
+        <!-- Search Bar -->
+        <form id="lookup-form" class="search-bar-wrap">
+          <input
+            id="lookup-handle"
+            class="search-input"
+            type="text"
+            placeholder="Search handle (e.g. alice)..."
+            autocomplete="off"
+            spellcheck="false"
+            required
+            autofocus
+          />
+          <button id="lookup-btn" type="submit" class="btn btn-primary">Resolve Key</button>
+        </form>
+
+        <!-- Quick Examples -->
+        <div class="example-chips">
+          <span>Try sample handles:</span>
+          <button type="button" class="chip-btn" data-handle="alice">alice</button>
+        </div>
+
+        <p id="lookup-status" class="status"></p>
+
+        <!-- Empty State -->
+        <div
+          id="lookup-empty-state"
+          style="text-align: center; padding: 4rem 1rem; color: var(--text-muted)"
+        >
+          <div style="font-size: 2.2rem; margin-bottom: 0.5rem; color: var(--accent)">🔑</div>
+          <h3 style="margin: 0 0 0.5rem; color: var(--text-primary); font-size: 1.2rem">
+            Ready to Resolve
+          </h3>
+          <p style="margin: 0; max-width: 48ch; margin-inline: auto; font-size: 0.92rem">
+            Type a handle above or try
+            <button
+              type="button"
+              class="chip-btn"
+              data-handle="alice"
+              style="vertical-align: middle"
+            >
+              alice
+            </button>
+            to inspect registered keys.
+          </p>
+        </div>
+
+        <!-- Error State -->
+        <div
+          id="lookup-error-state"
+          style="
+            display: none;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            background: rgba(244, 63, 94, 0.05);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            border-radius: var(--radius-md);
+          "
+        >
+          <div style="font-size: 2rem; margin-bottom: 0.5rem">⚠️</div>
+          <h3 style="margin: 0 0 0.5rem; color: var(--error); font-size: 1.15rem">
+            Handle Not Found
+          </h3>
+          <p
+            id="lookup-error-msg"
+            style="margin: 0 0 1rem; color: var(--text-secondary); font-size: 0.92rem"
+          ></p>
+          <a
+            id="lookup-upload-link"
+            href="/upload.html"
+            class="btn btn-secondary"
+            style="font-size: 0.85rem"
+          >
+            Publish this handle now →
+          </a>
+        </div>
+
+        <!-- Results Card -->
+        <div id="lookup-results-card" style="display: none">
+          <div class="handle-overview">
+            <div class="handle-title-group">
+              <h3 id="result-handle-title">@handle</h3>
+              <span class="badge-verified">✓ Verified Proof</span>
+            </div>
+            <div class="handle-links">
+              <button id="btn-copy-curl-keys" class="btn-copy-sm" type="button">
+                Copy .keys curl
+              </button>
+              <button id="btn-copy-raw-json" class="btn-copy-sm" type="button">Copy JSON</button>
+            </div>
+          </div>
+
+          <!-- View Tabs -->
+          <div class="view-tabs">
+            <button id="tab-btn-visual" class="tab-btn active" type="button">
+              Visual Key Cards
+            </button>
+            <button id="tab-btn-json" class="tab-btn" type="button">Raw JSON Payload</button>
+          </div>
+
+          <!-- Tab 1: Visual Keys -->
+          <div id="view-visual-keys">
+            <div id="keys-list-container"></div>
+            <div id="proof-info-container" class="proof-card" style="display: none"></div>
+          </div>
+
+          <!-- Tab 2: Raw JSON -->
+          <div id="view-raw-json" style="display: none">
+            <pre id="raw-json-viewer" class="code"></pre>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>
+          <div class="brand" style="font-size: 1.1rem; margin-bottom: 0.4rem">
+            <span class="brand-dot"></span>
+            pubkey<span>.locker</span>
+          </div>
+          <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted)">
+            Enterprise public key registry backed by Oracle Autonomous Database.
+          </p>
+        </div>
+        <div class="footer-links">
+          <a href="/lookup.html">Lookup</a>
+          <a href="/upload.html">Publish</a>
+          <a href="/docs.html">Docs</a>
+          <a href="/admin.html">Admin</a>
+          <a href="https://github.com/pranabeshsingh/pubkey_locker" target="_blank" rel="noreferrer"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="/app.js"></script>
+    <script src="/cli.js"></script>
+  </body>
+</html>

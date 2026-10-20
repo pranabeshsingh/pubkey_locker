@@ -47,7 +47,7 @@ jobs:
             echo "Tracked secret or wallet file found"
             exit 1
           fi
-          if grep -RInE 'ORACLE_PASSWORD|ADMIN_TOKEN|PRIVATE KEY|BEGIN .*PRIVATE KEY' --exclude-dir=.git --exclude='*.md' --exclude='.env.example' .; then
+          if git grep -nI -E '(ORACLE_PASSWORD|ADMIN_TOKEN|VM_PASSWORD)=[^[:space:]]|-----BEGIN [A-Z ]*PRIVATE KEY-----' -- ':!*.md' ':!.env.example' ':!.github/workflows/*'; then
             echo "Potential secret found in tracked files"
             exit 1
           fi

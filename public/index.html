@@ -48,7 +48,14 @@
       <!-- Hero Section -->
       <section class="container hero">
         <div>
-          <span class="eyebrow">Enterprise Public Key Registry</span>
+          <div class="hero-badges">
+            <span class="eyebrow">Enterprise Public Key Registry</span>
+            <div class="trust-badge" title="Live registry count from Oracle Autonomous Database">
+              <span class="pulse-dot"></span>
+              <span id="hero-key-count" class="trust-count">...</span>
+              <span class="trust-label">Bundles Trusted</span>
+            </div>
+          </div>
           <h1>Store, validate, and resolve signed public keys.</h1>
           <p class="hero-lead">
             pubkey.locker is a curl-friendly keyserver backed by Oracle Autonomous Database. Publish
@@ -127,6 +134,15 @@
               </button>
             </div>
             <div class="terminal-row">
+              <span class="terminal-cmd"><span>$</span> curl https://pubkey.locker/api/counts</span>
+              <button
+                class="btn-copy-sm copy-btn"
+                data-copy="curl https://pubkey.locker/api/counts"
+              >
+                copy
+              </button>
+            </div>
+            <div class="terminal-row">
               <span class="terminal-cmd"
                 ><span>$</span> curl -X POST https://pubkey.locker/api/keys</span
               >
@@ -137,6 +153,46 @@
                 copy
               </button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trust Metrics Strip -->
+      <section class="container trust-strip">
+        <div class="trust-card">
+          <div class="trust-metric">
+            <span id="trust-total-count" class="trust-value">0</span>
+            <span class="trust-unit">Bundles</span>
+          </div>
+          <div class="trust-desc">
+            Registered public key bundles securely stored and verified in Oracle Cloud.
+          </div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-metric">
+            <span class="trust-value">100%</span>
+            <span class="trust-unit">Signed</span>
+          </div>
+          <div class="trust-desc">
+            Ownership challenges cryptographically proven with Ed25519 or RSA signatures.
+          </div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-metric">
+            <span class="trust-value">26ai</span>
+            <span class="trust-unit">Autonomous</span>
+          </div>
+          <div class="trust-desc">
+            Mission-critical Oracle DB backbone with automated failover and encryption.
+          </div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-metric">
+            <span class="trust-value">0</span>
+            <span class="trust-unit">Dependencies</span>
+          </div>
+          <div class="trust-desc">
+            Direct curl resolution for sysadmins and OpenSSH AuthorizedKeysCommand.
           </div>
         </div>
       </section>

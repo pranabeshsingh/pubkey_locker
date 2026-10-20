@@ -33,10 +33,13 @@ console.log("=== CONSTRAINTS ===");
 console.table(pk.rows);
 
 // Explain plan for handle lookup
-await conn.execute(`
+await conn.execute(
+  `
   EXPLAIN PLAN FOR
   SELECT TO_CHAR(bundle) AS bundle FROM bundles WHERE handle = :handle ORDER BY created_at DESC FETCH FIRST 1 ROWS ONLY
-`, { handle: "test" });
+`,
+  { handle: "test" }
+);
 const plan1out = await conn.execute("SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY)");
 console.log("=== PLAN: handle lookup ===");
 console.table(plan1out.rows);

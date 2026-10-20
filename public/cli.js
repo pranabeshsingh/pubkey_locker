@@ -133,10 +133,25 @@
         logLine("  lookup <handle>     Resolve key bundle by handle (e.g. lookup alice)");
         logLine("  validate <json>     Validate JSON key bundle against schema");
         logLine("  upload <json>       Upload JSON key bundle to registry");
+        logLine("  stats | counts      Display total registered key bundles");
         logLine("  open <page>         Navigate to page (home, lookup, upload, docs, admin)");
         logLine("  clear               Clear console screen");
         logLine("  exit | close        Close CLI overlay");
         break;
+
+      case "stats":
+      case "count":
+      case "counts": {
+        logLine("Querying registry statistics...", "muted");
+        try {
+          const res = await fetch("/api/counts");
+          const data = await res.json();
+          logLine(`Total public key bundles secured: ${data.total ?? 0}`, "success");
+        } catch (e) {
+          logLine(`Network error: ${e.message}`, "error");
+        }
+        break;
+      }
 
       case "lookup": {
         if (!args) {

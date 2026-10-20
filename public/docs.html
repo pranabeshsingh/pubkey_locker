@@ -69,6 +69,7 @@
           <div class="docs-nav-title">API Reference</div>
           <ul class="docs-nav-list">
             <li><a href="#endpoint-health">GET /health</a></li>
+            <li><a href="#endpoint-counts">GET /api/counts</a></li>
             <li><a href="#endpoint-validate">POST /api/validate</a></li>
             <li><a href="#endpoint-keys-post">POST /api/keys</a></li>
             <li><a href="#endpoint-keys-get">GET /api/keys/:handle</a></li>
@@ -360,6 +361,20 @@ curl https://pubkey.locker/health
 
 # Response 200 OK
 {"ok": true, "db": true}</pre>
+          </div>
+
+          <!-- Counts -->
+          <div id="endpoint-counts" class="endpoint-card">
+            <div class="endpoint-header">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/api/counts</span>
+            </div>
+            <p>Returns the total number of registered public key bundles stored in the database.</p>
+            <pre class="code">
+curl https://pubkey.locker/api/counts
+
+# Response 200 OK
+{"total": 128}</pre>
           </div>
 
           <!-- Validate -->

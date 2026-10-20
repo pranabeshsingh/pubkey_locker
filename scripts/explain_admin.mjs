@@ -13,10 +13,13 @@ const pool = await oracledb.createPool({
 const conn = await pool.getConnection();
 
 // Test without TO_CHAR
-await conn.execute(`
+await conn.execute(
+  `
   EXPLAIN PLAN FOR
   SELECT id, handle, created_at FROM bundles ORDER BY created_at DESC FETCH FIRST 50 ROWS ONLY
-`, []);
+`,
+  []
+);
 const plan = await conn.execute("SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY)");
 console.log("=== PLAN: admin list (no TO_CHAR) ===");
 console.table(plan.rows);

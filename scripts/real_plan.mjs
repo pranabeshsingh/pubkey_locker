@@ -13,7 +13,9 @@ const pool = await oracledb.createPool({
 const conn = await pool.getConnection();
 
 // Run with hint and get actual plan
-const r = await conn.execute("SELECT /*+ INDEX_DESC(bundles idx_bundles_created_at) */ id, handle, created_at FROM bundles ORDER BY created_at DESC FETCH FIRST 50 ROWS ONLY");
+const r = await conn.execute(
+  "SELECT /*+ INDEX_DESC(bundles idx_bundles_created_at) */ id, handle, created_at FROM bundles ORDER BY created_at DESC FETCH FIRST 50 ROWS ONLY"
+);
 console.log("Rows:", r.rows.length);
 
 // Get actual plan from V$SQL
@@ -21,9 +23,12 @@ const sql_id = r.sqlId;
 console.log("SQL ID:", sql_id);
 
 if (sql_id) {
-  const plan = await conn.execute(`
+  const plan = await conn.execute(
+    `
     SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(:sql_id, NULL, 'ALL'))
-  `, [sql_id]);
+  `,
+    [sql_id]
+  );
   console.log("=== Actual plan ===");
   console.table(plan.rows);
 }

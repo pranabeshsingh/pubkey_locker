@@ -91,6 +91,22 @@ function initHomePage() {
       window.location.href = `/lookup.html?handle=${encodeURIComponent(handle)}`;
     }
   });
+
+  async function loadCounts() {
+    try {
+      const data = await api("/api/counts");
+      const total = typeof data.total === "number" ? data.total : 0;
+      const formatted = total.toLocaleString();
+      const heroCount = $("hero-key-count");
+      if (heroCount) heroCount.textContent = formatted;
+      const trustCount = $("trust-total-count");
+      if (trustCount) trustCount.textContent = formatted;
+    } catch (err) {
+      console.error("Failed to fetch counts:", err);
+    }
+  }
+
+  loadCounts();
 }
 
 // -----------------------------------------------------------------------------

@@ -64,7 +64,7 @@ app.get("/api/bundles", async (req, res) => {
   if (!adminOk(req)) return res.status(401).json({ error: "admin token required" });
   const limit = Math.min(Number(req.query.limit || 50), 200);
   const rows = await query(
-    "SELECT id, handle, TO_CHAR(created_at) AS created_at FROM bundles ORDER BY created_at DESC FETCH FIRST :limit ROWS ONLY",
+    "SELECT /*+ INDEX_DESC(bundles idx_bundles_created_at) */ id, handle, created_at FROM bundles ORDER BY created_at DESC FETCH FIRST :limit ROWS ONLY",
     { limit }
   );
   res.json(

@@ -188,6 +188,14 @@ a {
   padding: 4.5rem 0 3.5rem;
 }
 
+.hero-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -201,6 +209,95 @@ a {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  color: var(--success);
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
+.trust-count {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin: 1rem auto 4rem;
+}
+
+.trust-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.4rem;
+  transition: all 0.15s ease;
+}
+
+.trust-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.trust-metric {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin-bottom: 0.4rem;
+}
+
+.trust-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+
+.trust-unit {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.trust-desc {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.45;
 }
 
 .hero h1 {
@@ -1249,6 +1346,9 @@ td.mono {
   .steps-grid {
     grid-template-columns: 1fr;
   }
+  .trust-strip {
+    grid-template-columns: 1fr 1fr;
+  }
   .workspace-grid {
     grid-template-columns: 1fr;
   }
@@ -1262,5 +1362,11 @@ td.mono {
   }
   .header-inner {
     flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 580px) {
+  .trust-strip {
+    grid-template-columns: 1fr;
   }
 }

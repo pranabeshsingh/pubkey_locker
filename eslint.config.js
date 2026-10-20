@@ -29,6 +29,7 @@ export default [
         confirm: "readonly",
         setTimeout: "readonly",
         navigator: "readonly",
+        URLSearchParams: "readonly",
       },
     },
   },

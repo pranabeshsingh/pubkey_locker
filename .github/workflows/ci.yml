@@ -1,4 +1,4 @@
-name: ci
+name: 🧪 CI - Quality, Build & Security
 
 on:
   push:
@@ -6,24 +6,36 @@ on:
   pull_request:
     branches: [master]
 
+permissions:
+  contents: read
+
 jobs:
-  validate:
+  quality:
+    name: 🧪 Quality Gates
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - name: Syntax check
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔍 Syntax check
         run: |
           for f in src/*.js public/app.js; do
             node --check "$f"
           done
-      - name: Tests
+
+      - name: 🧪 Tests
         run: npm test
-      - name: Secret scan
+
+      - name: 🕵️ Secret scan
         run: |
           if git ls-files | grep -E '(^|/)\.env$|(^|/)wallet/|\.pem$|\.p12$|\.jks$'; then
             echo "Tracked secret or wallet file found"
@@ -33,3 +45,47 @@ jobs:
             echo "Potential secret found in tracked files"
             exit 1
           fi
+
+  security:
+    name: 🛡️ Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔐 Dependency audit
+        run: npm audit --audit-level=high
+
+  build:
+    name: 📦 Build Artifact
+    needs: [quality, security]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Create deploy archive
+        run: |
+          tar -czf pubkey-locker.tar.gz \
+            --exclude='./.git' \
+            --exclude='./node_modules' \
+            --exclude='./.env' \
+            --exclude='./wallet' \
+            --exclude='./scripts/deploy-vm.sh' \
+            .
+
+      - name: ⬆️ Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pubkey-locker
+          path: pubkey-locker.tar.gz
+          retention-days: 7

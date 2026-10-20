@@ -24,9 +24,7 @@ app.get("/health", async (_req, res) => {
 
 app.get("/api/counts", async (_req, res) => {
   try {
-    const rows = await query(
-      "SELECT COUNT(*) AS total FROM bundles"
-    );
+    const rows = await query("SELECT COUNT(*) AS total FROM bundles");
     res.json({ total: Number(rows[0]?.TOTAL || 0) });
   } catch (error) {
     res.status(500).json({ error: error.message });

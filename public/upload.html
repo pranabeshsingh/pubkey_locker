@@ -123,13 +123,12 @@
               <ul class="schema-rules">
                 <li><span>version</span>: Must be integer <code>1</code></li>
                 <li>
-                  <span>handle</span>: 1–64 characters (alphanumeric, <code>_</code>,
-                  <code>-</code>)
+                  <span>handle</span>: 3–32 characters (lowercase alphanumeric, <code>-</code>)
                 </li>
                 <li><span>keys</span>: Non-empty array of public key objects</li>
                 <li>
-                  <span>type</span>: <code>ssh-ed25519</code>, <code>rsa-sha2-512</code>,
-                  <code>rsa-sha2-256</code>, or <code>ecdsa-sha2-nistp256</code>
+                  <span>type</span>: <code>ssh-ed25519</code>, <code>ssh-rsa</code>,
+                  <code>ssh-ecdsa</code>, <code>pgp</code>, or <code>age</code>
                 </li>
                 <li><span>proof</span>: Ownership challenge signature and signing key</li>
               </ul>

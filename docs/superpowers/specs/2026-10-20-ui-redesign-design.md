@@ -2,13 +2,14 @@
 
 **Date**: 2026-10-20  
 **Status**: Approved  
-**Author**: pranabeshsingh / Antigravity  
+**Author**: pranabeshsingh / Antigravity
 
 ---
 
 ## 1. Goal & Overview
 
 Transform `pubkey.locker` from a single-page utility into a professional, enterprise-grade developer platform. The redesign establishes:
+
 1. A multi-page information architecture splitting previous single-page sections into dedicated, focused workflows (`/`, `/lookup.html`, `/upload.html`, `/docs.html`, `/admin.html`).
 2. A modern developer platform aesthetic (slate/zinc palette, subtle border highlights, clean monospace typography, responsive cards, copyable snippets).
 3. A global Quake-style drop-down Web CLI suite activated anywhere across the site with the tilde/backtick key (`~` or `` ` ``) or header trigger.
@@ -19,6 +20,7 @@ Transform `pubkey.locker` from a single-page utility into a professional, enterp
 ## 2. Information Architecture & Page Structure
 
 ### 2.1. Home (`/` or `index.html`)
+
 - **Hero Section**:
   - Eyebrow badge: "Enterprise Public Key Registry"
   - Headline: "Store, validate, and resolve signed public keys."
@@ -38,6 +40,7 @@ Transform `pubkey.locker` from a single-page utility into a professional, enterp
   - System status, documentation links, GitHub repository link, copyright notice.
 
 ### 2.2. Key Explorer (`/lookup.html`)
+
 - **Handle Search**:
   - Full-width search bar with clear button, auto-focused.
   - Reads `?handle=<handle>` query parameter on page load and automatically performs lookup.
@@ -57,6 +60,7 @@ Transform `pubkey.locker` from a single-page utility into a professional, enterp
     - 404 state provides clear feedback with a direct link to publish that handle at `/upload.html`.
 
 ### 2.3. Publish & Validate Workspace (`/upload.html`)
+
 - **Dual Mode Switch**:
   - Tab 1: "Publish to Registry" (validates schema and persists bundle to database via `POST /api/keys`).
   - Tab 2: "Validate Only" (dry-run schema check via `POST /api/validate` without persisting).
@@ -76,6 +80,7 @@ Transform `pubkey.locker` from a single-page utility into a professional, enterp
         - Formatted expected JSON snippet with copy button.
 
 ### 2.4. Developer Documentation (`/docs.html`)
+
 - **Documentation Layout**:
   - Sticky sidebar navigation on desktop for quick section jumping.
   - Mobile section dropdown / quick jump.
@@ -95,6 +100,7 @@ Transform `pubkey.locker` from a single-page utility into a professional, enterp
   - **Self-Hosting**: Guide for running with Node.js and Oracle Autonomous Database.
 
 ### 2.5. Admin Console (`/admin.html`)
+
 - **Authentication**:
   - Password input for `X-Admin-Token` with `sessionStorage` persistence.
   - "Connect & Load" button.
@@ -110,6 +116,7 @@ Transform `pubkey.locker` from a single-page utility into a professional, enterp
 ## 3. Global Web CLI Suite (`~` or `` ` ``)
 
 ### 3.1. Overview & Invocation
+
 - Accessible from any page on the website.
 - Hotkey: Pressing `` ` `` or `~` anywhere on the site slides down an interactive terminal console.
 - Form protection: Keystroke is ignored if the user is typing inside an `<input>` or `<textarea>` element.
@@ -117,6 +124,7 @@ Transform `pubkey.locker` from a single-page utility into a professional, enterp
 - Dismissal: Pressing `Escape`, clicking the backdrop, or running `exit` / `close` dismisses the console.
 
 ### 3.2. Console Features
+
 - Scanline aesthetic with backdrop blur and terminal header controls (close, clear).
 - Command prompt: `pubkey> ` with auto-focus on open.
 - Up / Down arrow key history navigation for previously executed commands.
@@ -134,6 +142,7 @@ Transform `pubkey.locker` from a single-page utility into a professional, enterp
 ## 4. Visual Design System & Tokens
 
 ### 4.1. Color Tokens
+
 - **Backgrounds**:
   - `--bg-canvas`: `#080c14` (Deep canvas)
   - `--bg-surface`: `#0e1626` (Header, panels, cards)
@@ -156,6 +165,7 @@ Transform `pubkey.locker` from a single-page utility into a professional, enterp
   - `--text-muted`: `#64748b` (Labels, timestamps, captions)
 
 ### 4.2. Typography & Form Controls
+
 - Primary font stack: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif.
 - Monospace font stack: `JetBrains Mono`, `ui-monospace`, `Menlo`, `Monaco`, `Consolas`, monospace.
 - Form inputs & buttons:

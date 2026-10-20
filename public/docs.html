@@ -3,167 +3,413 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Docs · pubkey.locker</title>
+    <title>Documentation · pubkey.locker</title>
+    <meta
+      name="description"
+      content="Comprehensive API reference, bundle specifications, OpenSSH integration, and deployment guides for pubkey.locker."
+    />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <header class="site-header">
       <div class="container header-inner">
-        <a class="brand" href="/">pubkey<span>.locker</span></a>
+        <a class="brand" href="/">
+          <span class="brand-dot"></span>
+          pubkey<span>.locker</span>
+        </a>
         <nav class="nav">
-          <a href="/">Home</a>
+          <a href="/lookup.html">Lookup</a>
+          <a href="/upload.html">Publish</a>
           <a href="/docs.html" class="active">Docs</a>
           <a href="/admin.html">Admin</a>
+        </nav>
+        <div class="nav-actions">
+          <button
+            id="cli-toggle-btn"
+            class="btn-cli"
+            type="button"
+            title="Toggle Web CLI (Hotkey: ~ or `)"
+          >
+            <span>CLI</span>
+            <span class="kbd-badge">~</span>
+          </button>
           <a
-            class="btn-nav"
+            class="btn-gh"
             href="https://github.com/pranabeshsingh/pubkey_locker"
             target="_blank"
             rel="noreferrer"
             >GitHub</a
           >
-        </nav>
+        </div>
       </div>
     </header>
 
-    <main class="container">
-      <section class="section">
-        <div class="section-header">
-          <h2>Documentation</h2>
-          <p>Setup, API reference, deployment, and security guidance.</p>
-        </div>
-
-        <div class="doc-section">
-          <h3>Local development</h3>
-          <pre class="code">
-npm install
-cp .env.example .env
-# fill .env
-npm run dev</pre>
-        </div>
-
-        <div class="doc-section">
-          <h3>Environment variables</h3>
-          <ul class="checks">
-            <li><code class="inline">ORACLE_USER</code></li>
-            <li><code class="inline">ORACLE_PASSWORD</code></li>
-            <li><code class="inline">ORACLE_CONNECT_STRING</code></li>
-            <li><code class="inline">ORACLE_WALLET_LOCATION</code></li>
-            <li><code class="inline">ORACLE_WALLET_PASSWORD</code></li>
-            <li><code class="inline">PORT</code></li>
-            <li><code class="inline">ADMIN_TOKEN</code></li>
+    <main class="container docs-layout">
+      <!-- Sticky Sidebar -->
+      <aside class="docs-sidebar">
+        <div class="docs-nav-group">
+          <div class="docs-nav-title">Getting Started</div>
+          <ul class="docs-nav-list">
+            <li><a href="#quickstart">Quick Start</a></li>
+            <li><a href="#local-dev">Local Development</a></li>
+            <li><a href="#env-vars">Environment Variables</a></li>
           </ul>
         </div>
 
-        <div class="doc-section">
-          <h3>API reference</h3>
-          <pre class="code">
-GET  /health
-POST /api/validate
-POST /api/keys
-GET  /api/keys/:handle
-GET  /api/bundles          (admin token required)
-DELETE /api/keys/:id       (admin token required)</pre>
+        <div class="docs-nav-group">
+          <div class="docs-nav-title">Bundle Protocol</div>
+          <ul class="docs-nav-list">
+            <li><a href="#bundle-shape">Bundle Specification</a></li>
+            <li><a href="#supported-keys">Supported Key Types</a></li>
+            <li><a href="#proofs">Ownership Proofs</a></li>
+          </ul>
         </div>
 
-        <div class="doc-section">
-          <h3>Bundle shape</h3>
+        <div class="docs-nav-group">
+          <div class="docs-nav-title">API Reference</div>
+          <ul class="docs-nav-list">
+            <li><a href="#endpoint-health">GET /health</a></li>
+            <li><a href="#endpoint-validate">POST /api/validate</a></li>
+            <li><a href="#endpoint-keys-post">POST /api/keys</a></li>
+            <li><a href="#endpoint-keys-get">GET /api/keys/:handle</a></li>
+            <li><a href="#endpoint-bundles">GET /api/bundles</a></li>
+            <li><a href="#endpoint-delete">DELETE /api/keys/:id</a></li>
+          </ul>
+        </div>
+
+        <div class="docs-nav-group">
+          <div class="docs-nav-title">Integration &amp; Ops</div>
+          <ul class="docs-nav-list">
+            <li><a href="#ssh-integration">OpenSSH Integration</a></li>
+            <li><a href="#deployment">Deployment &amp; Systemd</a></li>
+            <li><a href="#security">Security Model</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Documentation Content -->
+      <div class="docs-content">
+        <!-- Quick Start -->
+        <section id="quickstart" class="doc-block">
+          <h2>Quick Start</h2>
+          <p>
+            pubkey.locker allows developers and systems to resolve public keys using standard
+            command-line utilities. You can fetch registered keys directly in authorized_keys format
+            or JSON.
+          </p>
+          <div class="terminal-card" style="margin-top: 1rem">
+            <div class="terminal-header">
+              <span class="terminal-title">curl usage examples</span>
+              <button
+                class="btn-copy-sm copy-btn"
+                data-copy="curl https://pubkey.locker/api/keys/alice"
+              >
+                Copy curl
+              </button>
+            </div>
+            <div class="terminal-body">
+              <div class="terminal-row">
+                <span class="terminal-cmd"
+                  ><span>$</span> curl https://pubkey.locker/api/keys/alice</span
+                >
+                <button
+                  class="btn-copy-sm copy-btn"
+                  data-copy="curl https://pubkey.locker/api/keys/alice"
+                >
+                  copy
+                </button>
+              </div>
+              <div class="terminal-row">
+                <span class="terminal-cmd"
+                  ><span>$</span> curl https://pubkey.locker/alice.keys</span
+                >
+                <button
+                  class="btn-copy-sm copy-btn"
+                  data-copy="curl https://pubkey.locker/alice.keys"
+                >
+                  copy
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Local Development -->
+        <section id="local-dev" class="doc-block">
+          <h2>Local Development</h2>
+          <p>Clone the repository and install runtime dependencies with Node.js 20+.</p>
+          <pre class="code">
+git clone git@github.com:pranabeshsingh/pubkey_locker.git
+cd pubkey_locker
+npm install
+cp .env.example .env
+# Edit .env with Oracle Wallet credentials
+npm run dev</pre>
+        </section>
+
+        <!-- Environment Variables -->
+        <section id="env-vars" class="doc-block">
+          <h2>Environment Variables</h2>
+          <p>
+            All configuration is loaded via environment variables or a local <code>.env</code> file:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Description</th>
+                  <th>Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mono">PORT</td>
+                  <td>Application HTTP port (default: 3002)</td>
+                  <td class="mono">3002</td>
+                </tr>
+                <tr>
+                  <td class="mono">ORACLE_USER</td>
+                  <td>Oracle DB username</td>
+                  <td class="mono">ADMIN</td>
+                </tr>
+                <tr>
+                  <td class="mono">ORACLE_PASSWORD</td>
+                  <td>Database password</td>
+                  <td class="mono">••••••••</td>
+                </tr>
+                <tr>
+                  <td class="mono">ORACLE_CONNECT_STRING</td>
+                  <td>TNS alias in tnsnames.ora</td>
+                  <td class="mono">pubkeylocker_tp</td>
+                </tr>
+                <tr>
+                  <td class="mono">ORACLE_WALLET_LOCATION</td>
+                  <td>Path to extracted wallet directory</td>
+                  <td class="mono">/opt/pubkey-locker/wallet</td>
+                </tr>
+                <tr>
+                  <td class="mono">ADMIN_TOKEN</td>
+                  <td>Secret token for admin API endpoints</td>
+                  <td class="mono">secret_token_123</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Bundle Specification -->
+        <section id="bundle-shape" class="doc-block">
+          <h2>Bundle Specification</h2>
+          <p>
+            Public key bundles are JSON objects containing keys, handle metadata, and ownership
+            proofs.
+          </p>
           <pre class="code">
 {
   "version": 1,
   "handle": "alice",
-  "keys": [{
-    "type": "ssh-ed25519",
-    "publicKey": "ssh-ed25519 ...",
-    "fingerprint": "SHA256:..."
-  }],
+  "keys": [
+    {
+      "type": "ssh-ed25519",
+      "publicKey": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGd0+bO44D6kG5Z3f6T2fX9x3B8l4N5q2e6Y8X0w1a2b alice@pubkey.locker",
+      "fingerprint": "SHA256:d8k3J7mNp9Q1vX4yZ2w8kL5mN7pQ9rS2tU4vW6xY8zA"
+    }
+  ],
   "proof": {
     "message": "register alice",
-    "signature": "base64...",
-    "signedBy": "ssh-ed25519 ..."
+    "signature": "u7P9fX2kL8mN4pQ1rS5tU7vW9xY2zA3bC5dE7fG9hI1jK3lM5nO7pQ9rS1tU3vW5",
+    "signedBy": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGd0+bO44D6kG5Z3f6T2fX9x3B8l4N5q2e6Y8X0w1a2b"
   }
 }</pre>
-        </div>
+        </section>
 
-        <div class="doc-section">
-          <h3>Deployment</h3>
-          <p>Production runs on the Oracle VM at <code class="inline">/opt/pubkey-locker</code>.</p>
+        <!-- API Reference -->
+        <section id="api-ref" class="doc-block">
+          <h2>API Reference</h2>
+
+          <!-- Health -->
+          <div id="endpoint-health" class="endpoint-card">
+            <div class="endpoint-header">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/health</span>
+            </div>
+            <p>Checks application and Oracle Database connectivity.</p>
+            <pre class="code">
+curl https://pubkey.locker/health
+
+# Response 200 OK
+{"ok": true, "db": true}</pre>
+          </div>
+
+          <!-- Validate -->
+          <div id="endpoint-validate" class="endpoint-card">
+            <div class="endpoint-header">
+              <span class="method-badge method-post">POST</span>
+              <span class="endpoint-path">/api/validate</span>
+            </div>
+            <p>
+              Performs dry-run JSON schema and proof validation without persisting to the database.
+            </p>
+            <pre class="code">
+curl -X POST https://pubkey.locker/api/validate \
+  -H "Content-Type: application/json" \
+  -d '{"version":1,"handle":"alice",...}'
+
+# Response 200 OK
+{"valid": true}</pre>
+          </div>
+
+          <!-- Keys POST -->
+          <div id="endpoint-keys-post" class="endpoint-card">
+            <div class="endpoint-header">
+              <span class="method-badge method-post">POST</span>
+              <span class="endpoint-path">/api/keys</span>
+            </div>
+            <p>Validates and stores a signed key bundle in Oracle Autonomous Database.</p>
+            <pre class="code">
+curl -X POST https://pubkey.locker/api/keys \
+  -H "Content-Type: application/json" \
+  -d '{"version":1,"handle":"alice",...}'
+
+# Response 201 Created
+{"id": "6a9f73d8-5081-4b11-9a7c-1349f7ba3e12", "handle": "alice"}</pre>
+          </div>
+
+          <!-- Keys GET -->
+          <div id="endpoint-keys-get" class="endpoint-card">
+            <div class="endpoint-header">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/api/keys/:handle</span>
+            </div>
+            <p>Resolves the latest registered bundle for the specified handle.</p>
+            <pre class="code">
+curl https://pubkey.locker/api/keys/alice
+
+# Response 200 OK
+{"version": 1, "handle": "alice", "keys": [...], "proof": {...}}</pre>
+          </div>
+
+          <!-- Bundles List -->
+          <div id="endpoint-bundles" class="endpoint-card">
+            <div class="endpoint-header">
+              <span class="method-badge method-get">GET</span>
+              <span class="endpoint-path">/api/bundles</span>
+            </div>
+            <p>Lists stored bundles. Protected with <code>X-Admin-Token</code>.</p>
+            <pre class="code">
+curl https://pubkey.locker/api/bundles?limit=50 \
+  -H "X-Admin-Token: your_admin_token"
+
+# Response 200 OK
+[{"id": "...", "handle": "alice", "createdAt": "2026-10-20T18:00:00.000Z"}]</pre>
+          </div>
+
+          <!-- Delete -->
+          <div id="endpoint-delete" class="endpoint-card">
+            <div class="endpoint-header">
+              <span class="method-badge method-delete">DELETE</span>
+              <span class="endpoint-path">/api/keys/:id</span>
+            </div>
+            <p>
+              Permanently deletes a stored bundle by UUID. Protected with
+              <code>X-Admin-Token</code>.
+            </p>
+            <pre class="code">
+curl -X DELETE https://pubkey.locker/api/keys/6a9f73d8-5081-4b11-9a7c-1349f7ba3e12 \
+  -H "X-Admin-Token: your_admin_token"
+
+# Response 204 No Content</pre>
+          </div>
+        </section>
+
+        <!-- SSH Integration -->
+        <section id="ssh-integration" class="doc-block">
+          <h2>OpenSSH Integration</h2>
+          <p>
+            Configure OpenSSH daemon to resolve user keys directly from pubkey.locker using
+            <code>AuthorizedKeysCommand</code> in <code>/etc/ssh/sshd_config</code>:
+          </p>
           <pre class="code">
-npm install
-sudo cp deploy/pubkey-locker.service /etc/systemd/system/pubkey-locker.service
-sudo systemctl daemon-reload
-sudo systemctl enable --now pubkey-locker
+# In /etc/ssh/sshd_config
+AuthorizedKeysCommand /usr/local/bin/pubkey-resolve %u
+AuthorizedKeysCommandUser nobody</pre>
+          <p>Create the resolver script in <code>/usr/local/bin/pubkey-resolve</code>:</p>
+          <pre class="code">
+#!/bin/sh
+set -e
+USER="$1"
+curl -sSf "https://pubkey.locker/${USER}.keys" || exit 0</pre>
+        </section>
 
+        <!-- Deployment -->
+        <section id="deployment" class="doc-block">
+          <h2>Deployment &amp; Systemd</h2>
+          <p>
+            Production runs as a systemd service managed behind Caddy reverse proxy on port 3002:
+          </p>
+          <pre class="code">
+# Update and restart service
+cd /opt/pubkey-locker
+git pull origin master
+npm ci --omit=dev
+sudo systemctl restart pubkey-locker
+
+# Validate and reload Caddy without restarting
 sudo caddy validate --config /etc/caddy/Caddyfile
 sudo caddy reload --config /etc/caddy/Caddyfile</pre>
-        </div>
+        </section>
 
-        <div class="doc-section">
-          <h3>Security</h3>
-          <ul class="checks">
-            <li>Keep secrets in <code class="inline">.env</code> only.</li>
-            <li>Keep the Oracle wallet outside the repository.</li>
-            <li>Admin endpoints require <code class="inline">X-Admin-Token</code>.</li>
-            <li>Rotate credentials if they are exposed.</li>
+        <!-- Security -->
+        <section id="security" class="doc-block">
+          <h2>Security Model</h2>
+          <ul class="schema-rules" style="margin-top: 1rem">
+            <li>
+              <span>Private Keys</span>: Never uploaded or stored. Private keys remain on client
+              machines.
+            </li>
+            <li>
+              <span>Ownership Verification</span>: Registration requires a signature challenge
+              signed by the key.
+            </li>
+            <li>
+              <span>Admin Endpoints</span>: Authenticated strictly with high-entropy
+              <code>X-Admin-Token</code>.
+            </li>
+            <li>
+              <span>Oracle Cloud Wallet</span>: Excluded from git repositories, stored with
+              restricted permissions.
+            </li>
           </ul>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div>
-            <a class="brand" href="/">pubkey<span>.locker</span></a>
-            <p>Oracle-backed public key registry with signed bundles.</p>
+      <div class="container footer-inner">
+        <div>
+          <div class="brand" style="font-size: 1.1rem; margin-bottom: 0.4rem">
+            <span class="brand-dot"></span>
+            pubkey<span>.locker</span>
           </div>
-          <div>
-            <h4>Product</h4>
-            <a href="/">Home</a>
-            <a href="/docs.html">Docs</a>
-            <a href="/admin.html">Admin</a>
-          </div>
-          <div>
-            <h4>Resources</h4>
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker"
-              target="_blank"
-              rel="noreferrer"
-              >GitHub</a
-            >
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker/issues"
-              target="_blank"
-              rel="noreferrer"
-              >Issues</a
-            >
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker/actions"
-              target="_blank"
-              rel="noreferrer"
-              >CI</a
-            >
-          </div>
-          <div>
-            <h4>Project</h4>
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker/blob/master/README.md"
-              target="_blank"
-              rel="noreferrer"
-              >README</a
-            >
-            <a
-              href="https://github.com/pranabeshsingh/pubkey_locker"
-              target="_blank"
-              rel="noreferrer"
-              >Source</a
-            >
-          </div>
+          <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted)">
+            Enterprise public key registry backed by Oracle Autonomous Database.
+          </p>
         </div>
-        <div class="footer-bottom">
-          <span>© pubkey.locker</span>
-          <span>Built with Node.js, Oracle, and Caddy</span>
+        <div class="footer-links">
+          <a href="/lookup.html">Lookup</a>
+          <a href="/upload.html">Publish</a>
+          <a href="/docs.html">Docs</a>
+          <a href="/admin.html">Admin</a>
+          <a href="https://github.com/pranabeshsingh/pubkey_locker" target="_blank" rel="noreferrer"
+            >GitHub</a
+          >
         </div>
       </div>
     </footer>
+
+    <script src="/app.js"></script>
+    <script src="/cli.js"></script>
   </body>
 </html>

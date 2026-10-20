@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pubkey.locker</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#home">pubkey.locker</a>
+        <nav class="nav">
+          <a href="#upload">Upload</a>
+          <a href="#lookup">Lookup</a>
+          <a href="#validate">Validate</a>
+          <a href="#admin">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="home" class="hero">
+        <div>
+          <p class="eyebrow">Public key registry</p>
+          <h1>Store, validate, and resolve SSH public keys.</h1>
+          <p class="lead">
+            A curl-friendly keyserver for signed key bundles. Upload a bundle, validate it,
+            and resolve it by handle.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#upload">Upload key</a>
+            <a class="btn btn-secondary" href="#lookup">Lookup handle</a>
+          </div>
+        </div>
+        <div class="terminal">
+          <p><span>$</span> curl https://pubkey.locker/alice.keys</p>
+          <p><span>$</span> curl https://pubkey.locker/alice.json</p>
+          <p><span>$</span> curl -X POST https://pubkey.locker/api/keys</p>
+        </div>
+      </section>
+
+      <section id="upload" class="panel">
+        <div class="panel-header">
+          <h2>Upload key bundle</h2>
+          <p>Paste a signed JSON bundle. It is validated before storage.</p>
+        </div>
+        <div class="grid two">
+          <div>
+            <label for="upload-bundle">Bundle JSON</label>
+            <textarea id="upload-bundle" rows="18" spellcheck="false" placeholder='{"version":1,"handle":"alice",...}'></textarea>
+            <div class="actions">
+              <button id="validate-btn" class="btn btn-secondary">Validate</button>
+              <button id="upload-btn" class="btn btn-primary">Upload</button>
+            </div>
+            <p id="upload-status" class="status"></p>
+          </div>
+          <div>
+            <h3>Expected shape</h3>
+            <pre class="code">{
+  "version": 1,
+  "handle": "alice",
+  "keys": [{
+    "type": "ssh-ed25519",
+    "publicKey": "ssh-ed25519 ...",
+    "fingerprint": "SHA256:..."
+  }],
+  "proof": {
+    "message": "register alice",
+    "signature": "base64...",
+    "signedBy": "ssh-ed25519 ..."
+  }
+}</pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="lookup" class="panel">
+        <div class="panel-header">
+          <h2>Lookup handle</h2>
+          <p>Fetch the latest bundle for a handle.</p>
+        </div>
+        <div class="inline-form">
+          <input id="lookup-handle" type="text" placeholder="alice" />
+          <button id="lookup-btn" class="btn btn-primary">Lookup</button>
+        </div>
+        <p id="lookup-status" class="status"></p>
+        <pre id="lookup-result" class="code result"></pre>
+      </section>
+
+      <section id="validate" class="panel">
+        <div class="panel-header">
+          <h2>Validate bundle</h2>
+          <p>Check schema and required fields without storing.</p>
+        </div>
+        <div class="grid two">
+          <div>
+            <textarea id="validate-bundle" rows="14" spellcheck="false" placeholder='{"version":1,...}'></textarea>
+            <button id="validate-only-btn" class="btn btn-primary">Validate only</button>
+            <p id="validate-status" class="status"></p>
+          </div>
+          <div>
+            <h3>Checks</h3>
+            <ul class="checks">
+              <li>Version is 1</li>
+              <li>Handle format</li>
+              <li>Non-empty key list</li>
+              <li>Supported key types</li>
+              <li>Proof fields present</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin" class="panel">
+        <div class="panel-header">
+          <h2>Admin</h2>
+          <p>Protected by admin token. View and remove stored bundles.</p>
+        </div>
+        <div class="inline-form">
+          <input id="admin-token" type="password" placeholder="Admin token" />
+          <button id="admin-load-btn" class="btn btn-primary">Load bundles</button>
+        </div>
+        <p id="admin-status" class="status"></p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Handle</th><th>ID</th><th>Created</th><th>Action</th></tr>
+            </thead>
+            <tbody id="admin-rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>pubkey.locker · Oracle-backed keyserver · Caddy TLS</p>
+      </div>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

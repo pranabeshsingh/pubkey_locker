@@ -1,0 +1,17 @@
+http://pubkey.locker, http://www.pubkey.locker {
+    redir https://{host}{uri} 301
+}
+
+https://www.pubkey.locker {
+    redir https://pubkey.locker{uri} 301
+}
+
+pubkey.locker {
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+    reverse_proxy 127.0.0.1:3002
+}

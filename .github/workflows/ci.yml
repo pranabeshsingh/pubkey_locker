@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Syntax check
+        run: |
+          for f in src/*.js public/app.js; do
+            node --check "$f"
+          done
+      - name: Tests
+        run: npm test
+      - name: Secret scan
+        run: |
+          if git ls-files | grep -E '(^|/)\.env$|(^|/)wallet/|\.pem$|\.p12$|\.jks$'; then
+            echo "Tracked secret or wallet file found"
+            exit 1
+          fi
+          if grep -RInE 'ORACLE_PASSWORD|ADMIN_TOKEN|PRIVATE KEY|BEGIN .*PRIVATE KEY' --exclude-dir=.git --exclude='*.md' --exclude='.env.example' .; then
+            echo "Potential secret found in tracked files"
+            exit 1
+          fi

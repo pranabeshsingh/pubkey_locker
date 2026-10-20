@@ -2,6 +2,7 @@ const $ = (id) => document.getElementById(id);
 
 function setStatus(id, message, type = "") {
   const el = $(id);
+  if (!el) return;
   el.textContent = message;
   el.className = `status ${type}`.trim();
 }
@@ -25,14 +26,21 @@ async function api(path, options = {}) {
 }
 
 function parseBundle(id) {
+  const el = $(id);
+  if (!el) throw new Error("Missing input");
   try {
-    return JSON.parse($(id).value);
+    return JSON.parse(el.value);
   } catch {
     throw new Error("Invalid JSON");
   }
 }
 
-$("validate-btn").addEventListener("click", async () => {
+function bind(id, event, handler) {
+  const el = $(id);
+  if (el) el.addEventListener(event, handler);
+}
+
+bind("validate-btn", "click", async () => {
   try {
     const bundle = parseBundle("upload-bundle");
     const result = await api("/api/validate", { method: "POST", body: JSON.stringify(bundle) });
@@ -42,7 +50,7 @@ $("validate-btn").addEventListener("click", async () => {
   }
 });
 
-$("upload-btn").addEventListener("click", async () => {
+bind("upload-btn", "click", async () => {
   try {
     const bundle = parseBundle("upload-bundle");
     const result = await api("/api/keys", { method: "POST", body: JSON.stringify(bundle) });
@@ -52,8 +60,9 @@ $("upload-btn").addEventListener("click", async () => {
   }
 });
 
-$("lookup-btn").addEventListener("click", async () => {
-  const handle = $("lookup-handle").value.trim();
+bind("lookup-btn", "click", async () => {
+  const input = $("lookup-handle");
+  const handle = input ? input.value.trim() : "";
   if (!handle) {
     setStatus("lookup-status", "Handle is required.", "error");
     return;
@@ -61,15 +70,17 @@ $("lookup-btn").addEventListener("click", async () => {
   setStatus("lookup-status", "Loading...", "");
   try {
     const data = await api(`/api/keys/${encodeURIComponent(handle)}`);
-    $("lookup-result").textContent = JSON.stringify(data, null, 2);
+    const result = $("lookup-result");
+    if (result) result.textContent = JSON.stringify(data, null, 2);
     setStatus("lookup-status", "Loaded.", "success");
   } catch (error) {
-    $("lookup-result").textContent = "";
+    const result = $("lookup-result");
+    if (result) result.textContent = "";
     setStatus("lookup-status", error.message, "error");
   }
 });
 
-$("validate-only-btn").addEventListener("click", async () => {
+bind("validate-only-btn", "click", async () => {
   try {
     const bundle = parseBundle("validate-bundle");
     const result = await api("/api/validate", { method: "POST", body: JSON.stringify(bundle) });
@@ -79,16 +90,19 @@ $("validate-only-btn").addEventListener("click", async () => {
   }
 });
 
-$("admin-load-btn").addEventListener("click", async () => {
-  const token = $("admin-token").value.trim();
+bind("admin-load-btn", "click", async () => {
+  const tokenInput = $("admin-token");
+  const token = tokenInput ? tokenInput.value.trim() : "";
   if (!token) {
     setStatus("admin-status", "Admin token is required.", "error");
     return;
   }
+  sessionStorage.setItem("admin-token", token);
   setStatus("admin-status", "Loading...", "");
   try {
     const rows = await api("/api/bundles?limit=100", { headers: { "X-Admin-Token": token } });
     const tbody = $("admin-rows");
+    if (!tbody) return;
     tbody.innerHTML = "";
     for (const row of rows) {
       const tr = document.createElement("tr");
@@ -120,6 +134,10 @@ $("admin-load-btn").addEventListener("click", async () => {
     setStatus("admin-status", error.message, "error");
   }
 });
+
+const savedToken = sessionStorage.getItem("admin-token");
+const adminTokenInput = $("admin-token");
+if (savedToken && adminTokenInput) adminTokenInput.value = savedToken;
 
 function escapeHtml(value) {
   return String(value)

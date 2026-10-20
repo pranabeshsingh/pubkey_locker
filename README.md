@@ -65,4 +65,3 @@ sudo caddy reload --config /etc/caddy/Caddyfile
 - Keep the Oracle wallet outside the repository.
 - Rotate credentials if they are exposed.
 - Admin endpoints require `X-Admin-Token`.
-EOF

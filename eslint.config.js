@@ -27,6 +27,8 @@ export default [
         fetch: "readonly",
         sessionStorage: "readonly",
         confirm: "readonly",
+        setTimeout: "readonly",
+        navigator: "readonly",
       },
     },
   },

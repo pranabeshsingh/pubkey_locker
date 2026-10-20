@@ -7,3 +7,4 @@ wallet/
 .DS_Store
 # Local VM deployment helper (contains operational secrets usage)
 scripts/deploy-vm.sh
+*.tar.gz

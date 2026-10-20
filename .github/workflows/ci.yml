@@ -87,6 +87,7 @@ jobs:
             --exclude='./.env' \
             --exclude='./wallet' \
             --exclude='./scripts/deploy-vm.sh' \
+            --exclude='./pubkey-locker.tar.gz' \
             .
 
       - name: ⬆️ Upload artifact

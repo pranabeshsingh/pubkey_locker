@@ -81,18 +81,17 @@ jobs:
 
       - name: 📦 Create deploy archive
         run: |
-          tar -czf pubkey-locker.tar.gz \
+          tar -czf "$RUNNER_TEMP/pubkey-locker.tar.gz" \
             --exclude='./.git' \
             --exclude='./node_modules' \
             --exclude='./.env' \
             --exclude='./wallet' \
             --exclude='./scripts/deploy-vm.sh' \
-            --exclude='./pubkey-locker.tar.gz' \
             .
 
       - name: ⬆️ Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: pubkey-locker
-          path: pubkey-locker.tar.gz
+          path: ${{ runner.temp }}/pubkey-locker.tar.gz
           retention-days: 7

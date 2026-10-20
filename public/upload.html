@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Publish &amp; Validate · pubkey.locker</title>
+    <meta
+      name="description"
+      content="Publish signed public key bundles to pubkey.locker or perform dry-run schema and signature validation."
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">
+          <span class="brand-dot"></span>
+          pubkey<span>.locker</span>
+        </a>
+        <nav class="nav">
+          <a href="/lookup.html">Lookup</a>
+          <a href="/upload.html" class="active">Publish</a>
+          <a href="/docs.html">Docs</a>
+          <a href="/admin.html">Admin</a>
+        </nav>
+        <div class="nav-actions">
+          <button
+            id="cli-toggle-btn"
+            class="btn-cli"
+            type="button"
+            title="Toggle Web CLI (Hotkey: ~ or `)"
+          >
+            <span>CLI</span>
+            <span class="kbd-badge">~</span>
+          </button>
+          <a
+            class="btn-gh"
+            href="https://github.com/pranabeshsingh/pubkey_locker"
+            target="_blank"
+            rel="noreferrer"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="container" style="padding-top: 3rem">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Publish &amp; Validate Workspace</h2>
+          <p>
+            Commit signed public key bundles to Oracle Autonomous Database or run schema dry-run
+            checks.
+          </p>
+        </div>
+
+        <!-- Mode Switcher -->
+        <div class="view-tabs">
+          <button id="tab-mode-publish" type="button" class="tab-btn active">
+            Publish to Registry
+          </button>
+          <button id="tab-mode-validate" type="button" class="tab-btn">
+            Dry-Run Validate Only
+          </button>
+        </div>
+
+        <!-- Two Column Workspace -->
+        <div class="workspace-grid">
+          <!-- Editor Column -->
+          <div>
+            <div class="editor-toolbar">
+              <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-secondary)"
+                >Bundle JSON Payload</span
+              >
+              <div class="editor-toolbar-actions">
+                <button id="btn-sample-bundle" type="button" class="btn-copy-sm">
+                  Insert Sample
+                </button>
+                <button id="btn-format-json" type="button" class="btn-copy-sm">Format JSON</button>
+                <button id="btn-clear-editor" type="button" class="btn-copy-sm">Clear</button>
+              </div>
+            </div>
+
+            <textarea
+              id="bundle-editor"
+              class="code-editor"
+              spellcheck="false"
+              placeholder='{&#10;  "version": 1,&#10;  "handle": "alice",&#10;  "keys": [...],&#10;  "proof": {...}&#10;}'
+            ></textarea>
+
+            <div
+              id="syntax-warning"
+              style="
+                display: none;
+                color: var(--error);
+                font-size: 0.82rem;
+                margin-top: 0.4rem;
+                font-family: var(--font-mono);
+              "
+            ></div>
+
+            <button
+              id="workspace-submit-btn"
+              type="button"
+              class="btn btn-primary"
+              style="width: 100%; margin-top: 1rem; padding: 0.85rem"
+            >
+              Publish Bundle to Registry
+            </button>
+
+            <div id="workspace-status" class="status"></div>
+          </div>
+
+          <!-- Schema Guide Column -->
+          <div>
+            <div class="schema-guide">
+              <h3>Specification Cheatsheet</h3>
+              <p>
+                Every bundle requires schema validation and a valid ownership proof signature before
+                persistence.
+              </p>
+
+              <ul class="schema-rules">
+                <li><span>version</span>: Must be integer <code>1</code></li>
+                <li>
+                  <span>handle</span>: 1–64 characters (alphanumeric, <code>_</code>,
+                  <code>-</code>)
+                </li>
+                <li><span>keys</span>: Non-empty array of public key objects</li>
+                <li>
+                  <span>type</span>: <code>ssh-ed25519</code>, <code>rsa-sha2-512</code>,
+                  <code>rsa-sha2-256</code>, or <code>ecdsa-sha2-nistp256</code>
+                </li>
+                <li><span>proof</span>: Ownership challenge signature and signing key</li>
+              </ul>
+
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 0.4rem;
+                "
+              >
+                <span
+                  style="
+                    font-size: 0.78rem;
+                    font-weight: 700;
+                    color: var(--text-muted);
+                    text-transform: uppercase;
+                  "
+                >
+                  Expected JSON Shape
+                </span>
+                <button
+                  class="btn-copy-sm copy-btn"
+                  type="button"
+                  data-copy='{"version":1,"handle":"alice","keys":[{"type":"ssh-ed25519","publicKey":"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGd0+bO44D6kG5Z3f6T2fX9x3B8l4N5q2e6Y8X0w1a2b","fingerprint":"SHA256:d8k3..."}],"proof":{"message":"register alice","signature":"base64...","signedBy":"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGd0+bO44D6kG5Z3f6T2fX9x3B8l4N5q2e6Y8X0w1a2b"}}'
+                >
+                  Copy schema
+                </button>
+              </div>
+
+              <pre class="code" style="font-size: 0.78rem; line-height: 1.45; max-height: 220px">
+{
+  "version": 1,
+  "handle": "alice",
+  "keys": [{
+    "type": "ssh-ed25519",
+    "publicKey": "ssh-ed25519 ...",
+    "fingerprint": "SHA256:..."
+  }],
+  "proof": {
+    "message": "register alice",
+    "signature": "base64...",
+    "signedBy": "ssh-ed25519 ..."
+  }
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>
+          <div class="brand" style="font-size: 1.1rem; margin-bottom: 0.4rem">
+            <span class="brand-dot"></span>
+            pubkey<span>.locker</span>
+          </div>
+          <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted)">
+            Enterprise public key registry backed by Oracle Autonomous Database.
+          </p>
+        </div>
+        <div class="footer-links">
+          <a href="/lookup.html">Lookup</a>
+          <a href="/upload.html">Publish</a>
+          <a href="/docs.html">Docs</a>
+          <a href="/admin.html">Admin</a>
+          <a href="https://github.com/pranabeshsingh/pubkey_locker" target="_blank" rel="noreferrer"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="/app.js"></script>
+    <script src="/cli.js"></script>
+  </body>
+</html>

@@ -1,7 +1,6 @@
 # pubkey.locker
 
 ![CI](https://github.com/pranabeshsingh/pubkey_locker/actions/workflows/ci.yml/badge.svg)
-![Deploy](https://github.com/pranabeshsingh/pubkey_locker/actions/workflows/deploy.yml/badge.svg)
 
 Node.js keyserver backed by Oracle Autonomous Database. Stores signed key bundles and serves them by handle.
 
@@ -61,15 +60,6 @@ Append `deploy/Caddyfile.snippet` to `/etc/caddy/Caddyfile`, then:
 sudo caddy validate --config /etc/caddy/Caddyfile
 sudo caddy reload --config /etc/caddy/Caddyfile
 ```
-
-## CI/CD secrets
-
-Configure these in GitHub Actions before enabling deploy:
-
-- `VM_HOST`
-- `VM_USER`
-- `VM_PASSWORD`
-- `VM_APP_DIR`
 
 ## Security
 

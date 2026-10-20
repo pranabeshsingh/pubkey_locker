@@ -33,10 +33,11 @@ app.post("/api/keys", async (req, res) => {
   if (errors.length) return res.status(400).json({ errors });
 
   const id = randomUUID();
-  await query(
-    "INSERT INTO bundles (id, handle, bundle) VALUES (:id, :handle, :bundle)",
-    { id, handle: req.body.handle, bundle: JSON.stringify(req.body) }
-  );
+  await query("INSERT INTO bundles (id, handle, bundle) VALUES (:id, :handle, :bundle)", {
+    id,
+    handle: req.body.handle,
+    bundle: JSON.stringify(req.body),
+  });
   res.status(201).json({ id, handle: req.body.handle });
 });
 
@@ -57,11 +58,13 @@ app.get("/api/bundles", async (req, res) => {
     "SELECT id, handle, TO_CHAR(created_at) AS created_at FROM bundles ORDER BY created_at DESC FETCH FIRST :limit ROWS ONLY",
     { limit }
   );
-  res.json(rows.map((r) => ({
-    id: r.ID || r.id,
-    handle: r.HANDLE || r.handle,
-    createdAt: r.CREATED_AT || r.created_at,
-  })));
+  res.json(
+    rows.map((r) => ({
+      id: r.ID || r.id,
+      handle: r.HANDLE || r.handle,
+      createdAt: r.CREATED_AT || r.created_at,
+    }))
+  );
 });
 
 app.delete("/api/keys/:id", async (req, res) => {

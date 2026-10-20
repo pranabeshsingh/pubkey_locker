@@ -16,10 +16,14 @@ async function api(path, options = {}) {
     },
   });
   const text = await response.text();
-  let data = null;
-  try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+  let data;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = text;
+  }
   if (!response.ok) {
-    const message = data?.errors ? data.errors.join(", ") : (data?.error || response.statusText);
+    const message = data?.errors ? data.errors.join(", ") : data?.error || response.statusText;
     throw new Error(message);
   }
   return data;
@@ -44,7 +48,11 @@ bind("validate-btn", "click", async () => {
   try {
     const bundle = parseBundle("upload-bundle");
     const result = await api("/api/validate", { method: "POST", body: JSON.stringify(bundle) });
-    setStatus("upload-status", result.valid ? "Bundle is valid." : "Bundle is invalid.", result.valid ? "success" : "error");
+    setStatus(
+      "upload-status",
+      result.valid ? "Bundle is valid." : "Bundle is invalid.",
+      result.valid ? "success" : "error"
+    );
   } catch (error) {
     setStatus("upload-status", error.message, "error");
   }
@@ -84,7 +92,11 @@ bind("validate-only-btn", "click", async () => {
   try {
     const bundle = parseBundle("validate-bundle");
     const result = await api("/api/validate", { method: "POST", body: JSON.stringify(bundle) });
-    setStatus("validate-status", result.valid ? "Bundle is valid." : "Bundle is invalid.", result.valid ? "success" : "error");
+    setStatus(
+      "validate-status",
+      result.valid ? "Bundle is valid." : "Bundle is invalid.",
+      result.valid ? "success" : "error"
+    );
   } catch (error) {
     setStatus("validate-status", error.message, "error");
   }

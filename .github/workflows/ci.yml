@@ -32,6 +32,12 @@ jobs:
             node --check "$f"
           done
 
+      - name: 🧹 Lint
+        run: npm run lint
+
+      - name: 🎨 Format check
+        run: npm run format
+
       - name: 🧪 Tests
         run: npm test
 

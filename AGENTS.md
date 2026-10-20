@@ -6,7 +6,9 @@
   - Install: `npm install`
   - Dev: `npm run dev`
   - Start: `npm start`
-  - Test: `npm test` (currently no test files; exits 0)
+  - Lint: `npm run lint`
+  - Format check: `npm run format`
+  - Test: `npm test` (5 unit tests in `test/`)
 - Syntax check: `for f in src/*.js public/app.js; do node --check "$f"; done`
 - Required env: `ORACLE_USER`, `ORACLE_PASSWORD`, `ORACLE_CONNECT_STRING`, `ORACLE_WALLET_LOCATION`, `ORACLE_WALLET_PASSWORD`, `PORT`, `ADMIN_TOKEN` (see `.env.example`).
 - Oracle wallet and `.env` must stay outside git; `.gitignore` already excludes them.
@@ -19,6 +21,6 @@
 - Deployment target: Oracle VM `129.225.105.118`, app path `/opt/pubkey-locker`, systemd service `pubkey-locker`.
 - Caddy config is appended to `/etc/caddy/Caddyfile`; validate with `caddy validate`, then `caddy reload`, never restart.
 - Cloudflare DNS for `pubkey.locker` and `www.pubkey.locker` must be DNS-only A records to `129.225.105.118`.
-- CI: `.github/workflows/ci.yml` runs `npm ci`, syntax checks, tests, and a secret scan.
+- CI: `.github/workflows/ci.yml` runs `npm ci`, syntax checks, lint, format check, tests, security audit, build artifact, and a secret scan.
 - `IDEAS.md` is stale on hosting providers; verify provider status before relying on it.
 - Default branch is `master`; origin is `git@github.com:pranabeshsingh/pubkey_locker.git`.

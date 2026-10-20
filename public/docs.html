@@ -14,7 +14,13 @@
           <a href="/">Home</a>
           <a href="/docs.html" class="active">Docs</a>
           <a href="/admin.html">Admin</a>
-          <a class="btn-nav" href="https://github.com/pranabeshsingh/pubkey_locker" target="_blank" rel="noreferrer">GitHub</a>
+          <a
+            class="btn-nav"
+            href="https://github.com/pranabeshsingh/pubkey_locker"
+            target="_blank"
+            rel="noreferrer"
+            >GitHub</a
+          >
         </nav>
       </div>
     </header>
@@ -28,7 +34,8 @@
 
         <div class="doc-section">
           <h3>Local development</h3>
-          <pre class="code">npm install
+          <pre class="code">
+npm install
 cp .env.example .env
 # fill .env
 npm run dev</pre>
@@ -49,7 +56,8 @@ npm run dev</pre>
 
         <div class="doc-section">
           <h3>API reference</h3>
-          <pre class="code">GET  /health
+          <pre class="code">
+GET  /health
 POST /api/validate
 POST /api/keys
 GET  /api/keys/:handle
@@ -59,7 +67,8 @@ DELETE /api/keys/:id       (admin token required)</pre>
 
         <div class="doc-section">
           <h3>Bundle shape</h3>
-          <pre class="code">{
+          <pre class="code">
+{
   "version": 1,
   "handle": "alice",
   "keys": [{
@@ -78,7 +87,8 @@ DELETE /api/keys/:id       (admin token required)</pre>
         <div class="doc-section">
           <h3>Deployment</h3>
           <p>Production runs on the Oracle VM at <code class="inline">/opt/pubkey-locker</code>.</p>
-          <pre class="code">npm install
+          <pre class="code">
+npm install
 sudo cp deploy/pubkey-locker.service /etc/systemd/system/pubkey-locker.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now pubkey-locker
@@ -114,14 +124,39 @@ sudo caddy reload --config /etc/caddy/Caddyfile</pre>
           </div>
           <div>
             <h4>Resources</h4>
-            <a href="https://github.com/pranabeshsingh/pubkey_locker" target="_blank" rel="noreferrer">GitHub</a>
-            <a href="https://github.com/pranabeshsingh/pubkey_locker/issues" target="_blank" rel="noreferrer">Issues</a>
-            <a href="https://github.com/pranabeshsingh/pubkey_locker/actions" target="_blank" rel="noreferrer">CI</a>
+            <a
+              href="https://github.com/pranabeshsingh/pubkey_locker"
+              target="_blank"
+              rel="noreferrer"
+              >GitHub</a
+            >
+            <a
+              href="https://github.com/pranabeshsingh/pubkey_locker/issues"
+              target="_blank"
+              rel="noreferrer"
+              >Issues</a
+            >
+            <a
+              href="https://github.com/pranabeshsingh/pubkey_locker/actions"
+              target="_blank"
+              rel="noreferrer"
+              >CI</a
+            >
           </div>
           <div>
             <h4>Project</h4>
-            <a href="https://github.com/pranabeshsingh/pubkey_locker/blob/master/README.md" target="_blank" rel="noreferrer">README</a>
-            <a href="https://github.com/pranabeshsingh/pubkey_locker" target="_blank" rel="noreferrer">Source</a>
+            <a
+              href="https://github.com/pranabeshsingh/pubkey_locker/blob/master/README.md"
+              target="_blank"
+              rel="noreferrer"
+              >README</a
+            >
+            <a
+              href="https://github.com/pranabeshsingh/pubkey_locker"
+              target="_blank"
+              rel="noreferrer"
+              >Source</a
+            >
           </div>
         </div>
         <div class="footer-bottom">
